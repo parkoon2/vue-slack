@@ -31,7 +31,7 @@ export default {
   height: 100%;
   background: #000;
   padding-top: 2em;
-  overflow: scroll;
+  /* overflow: scroll; */
 }
 
 .content {
