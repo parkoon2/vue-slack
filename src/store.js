@@ -23,7 +23,7 @@ const actions = {
 }
 
 // Get data from state
-const getter = {
+const getters = {
     currentUser: state => state.currentUser
 }
 
@@ -32,7 +32,7 @@ const store = new Vuex.Store({
     state,
     mutations,
     actions,
-    getter
+    getters
 })
 
 export default store
