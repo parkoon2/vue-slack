@@ -32,7 +32,11 @@ export default {
         .auth()
         .signInWithPopup(new firebase.auth.GoogleAuthProvider())
         .then(response => {
-          console.log(response);
+          // dispatching user
+          this.$store.dispatch("setUser", response.user);
+
+          // then redirect to '/' page
+          this.$router.push("/");
         });
     }
   }

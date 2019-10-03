@@ -30,6 +30,7 @@ window.firebase = firebase;
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

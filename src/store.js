@@ -5,14 +5,22 @@ Vue.use(Vuex)
 
 // Create state that holds data
 const state = {
-    currentUser: 'parkoon'
+    currentUser: null
 }
 
 // Update state data through mutations
-const mutations = {}
+const mutations = {
+    SET_USER(state, payload) {
+        state.currentUser = payload
+    }
+}
 
 // Create actions for mutations with necessary data
-const actions = {}
+const actions = {
+    setUser({ commit }, payload) {
+        commit('SET_USER', payload)
+    }
+}
 
 // Get data from state
 const getter = {
