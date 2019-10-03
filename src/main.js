@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import firebase from 'firebase/app'
+import auth from 'firebase/auth'
 import store from './store'
 
 Vue.config.productionTip = false
@@ -23,6 +24,9 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 // firebase.analytics();
+firebase.auth().onAuthStateChanged(user => {
+  store.dispatch('setUser', user)
+})
 
 window.firebase = firebase;
 
