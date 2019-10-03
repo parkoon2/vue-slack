@@ -30,13 +30,16 @@
 
 <script>
 import auth from "firebase/auth";
+import database from "firebase/database";
+
 export default {
   name: "login",
 
   data() {
     return {
       errors: [],
-      loading: false
+      loading: false,
+      usersRef: firebase.database().ref("users")
     };
   },
 
@@ -57,6 +60,9 @@ export default {
         .auth()
         .signInWithPopup(new firebase.auth.GoogleAuthProvider())
         .then(response => {
+          // pass user to save in db
+          this.saveUserToUserRef(response.user);
+
           // dispatching user
           this.$store.dispatch("setUser", response.user);
 
@@ -67,6 +73,13 @@ export default {
           this.errors.push(err.message);
           this.loading = false;
         });
+    },
+
+    saveUserToUserRef(user) {
+      return this.usersRef.child(user.uid).set({
+        name: user.displayName,
+        avatar: user.photoURL
+      });
     },
 
     loginWithGithub() {
