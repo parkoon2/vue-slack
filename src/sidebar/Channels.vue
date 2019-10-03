@@ -2,6 +2,14 @@
   <div>
     <button @click="openModal" class="btn btn-outline-primary">Add Channel</button>
 
+    <!-- show list of channels -->
+    <div class="mt-4">
+      <button
+        v-for="channel in channels"
+        class="list-group-item list-group-item-action"
+        type="button"
+      >{{channel.name}}</button>
+    </div>
     <!-- Modal -->
     <div class="modal fade" id="channelModal">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -51,7 +59,8 @@ export default {
     return {
       new_channel: "",
       errors: [],
-      channelsRef: firebase.database().ref("channels")
+      channelsRef: firebase.database().ref("channels"),
+      channels: []
     };
   },
 
@@ -88,7 +97,24 @@ export default {
         .catch(err => {
           this.errors.push(err.message);
         });
+    },
+    addListeners() {
+      this.channelsRef.on("child_added", sanpshot => {
+        console.log("listening channelRef fon child_added: ", sanpshot.val());
+        this.channels.push(sanpshot.val());
+      });
+    },
+    detachListeners() {
+      this.channelsRef.off();
     }
+  },
+
+  mounted() {
+    this.addListeners();
+  },
+
+  beforeDestroy() {
+    this.detachListeners();
   }
 };
 </script>
