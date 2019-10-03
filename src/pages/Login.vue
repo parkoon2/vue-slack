@@ -21,7 +21,7 @@
       </div>
       <div class="row mt-5">
         <div class="col text-center">
-          <button class="btn btn-outline-info btn-lg">Login with Twitter</button>
+          <button @click="loginWithGithub" class="btn btn-outline-info btn-lg">Login with Github</button>
         </div>
       </div>
     </div>
@@ -56,6 +56,28 @@ export default {
       firebase
         .auth()
         .signInWithPopup(new firebase.auth.GoogleAuthProvider())
+        .then(response => {
+          // dispatching user
+          this.$store.dispatch("setUser", response.user);
+
+          // then redirect to '/' page
+          this.$router.push("/");
+        })
+        .catch(err => {
+          this.errors.push(err.message);
+          this.loading = false;
+        });
+    },
+
+    loginWithGithub() {
+      this.loading = true;
+
+      // clear old errors
+      this.errors = [];
+
+      firebase
+        .auth()
+        .signInWithPopup(new firebase.auth.GithubAuthProvider())
         .then(response => {
           // dispatching user
           this.$store.dispatch("setUser", response.user);
