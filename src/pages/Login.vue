@@ -5,6 +5,14 @@
       <p>Realtime communication at it's best</p>
     </div>
 
+    <!-- show loading state -->
+    <div class="alert alert-info" v-if="loading">Processing...</div>
+
+    <!-- show errors -->
+    <div class="alert alert-danger" v-if="hasErrors">
+      <div v-for="error in errors">{{error}}</div>
+    </div>
+
     <div class="container-fluid">
       <div class="row">
         <div class="col text-center">
@@ -25,9 +33,26 @@ import auth from "firebase/auth";
 export default {
   name: "login",
 
+  data() {
+    return {
+      errors: [],
+      loading: false
+    };
+  },
+
+  computed: {
+    hasErrors() {
+      return this.errors.length > 0;
+    }
+  },
+
   methods: {
     loginWithGoogle() {
-      console.log("login with google", firebase);
+      this.loading = true;
+
+      // clear old errors
+      this.errors = [];
+
       firebase
         .auth()
         .signInWithPopup(new firebase.auth.GoogleAuthProvider())
@@ -37,6 +62,10 @@ export default {
 
           // then redirect to '/' page
           this.$router.push("/");
+        })
+        .catch(err => {
+          this.errors.push(err.message);
+          this.loading = false;
         });
     }
   }
