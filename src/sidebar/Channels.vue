@@ -105,6 +105,11 @@ export default {
     addListeners() {
       this.channelsRef.on("child_added", sanpshot => {
         this.channels.push(sanpshot.val());
+
+        if (this.channels.length > 0) {
+          this.channel = this.channels[0];
+          this.$store.dispatch("setCurrentChannel", this.channel);
+        }
       });
     },
     detachListeners() {
