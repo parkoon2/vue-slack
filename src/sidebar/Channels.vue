@@ -11,9 +11,8 @@
         type="button"
         @click="changeChannel(channel)"
         :class="{'active': setActiveChannel(channel)}"
-      >{{channel.id}}</button>
+      >{{channel.name}}</button>
     </div>
-    {{JSON.stringify(this.channels)}}
     <!-- Modal -->
     <div class="modal fade" id="channelModal">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -106,14 +105,12 @@ export default {
     },
     addListeners() {
       this.channelsRef.on("child_added", sanpshot => {
-        console.log("............?", sanpshot.val());
-
         this.channels.push(sanpshot.val());
 
         if (this.channels.length > 0) {
           this.channel = this.channels[0];
 
-          // this.$store.dispatch("setPrivate", false);
+          this.$store.dispatch("setPrivate", false);
           this.$store.dispatch("setCurrentChannel", this.channel);
         }
       });
@@ -129,7 +126,7 @@ export default {
     },
 
     changeChannel(channel) {
-      // this.$store.dispatch("setPrivate", false);
+      this.$store.dispatch("setPrivate", false);
       this.$store.dispatch("setCurrentChannel", channel);
     }
   },

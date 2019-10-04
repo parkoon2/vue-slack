@@ -3,14 +3,30 @@
     <div class="text-light">
       <h4>Users</h4>
       <ul class="nav flex-column">
-        <li v-for="user in users" :key="user.uid" @click.prevent="changeChannel(user)">
-          <span :class="{'btn btn-primary': isActive(user)}">
-            <img class="img rounded-circle" :src="user.avatar" alt="avatar" height="20" />
-            <span :class="{'text-primary': isOnline(user), 'text-danger': !isOnline(user)}">
-              <a href="#">{{user.name}}</a>
+        <div class="mt-4">
+          <button
+            v-for="user in users"
+            :key="user.id"
+            class="list-group-item list-group-item-action"
+            type="button"
+            @click.prevent="changeChannel(user)"
+            :class="{'active': isActive(user)}"
+          >
+            <span
+              :class="{'fa fa-circle online': isOnline(user), 'fa fa-circle offline': !isOnline(user)}"
+            ></span>
+
+            <span>
+              <img class="img rounded-circle" :src="user.avatar" alt="avatar" height="20" />
+              <span>
+                <a
+                  href="#"
+                  :class="{'text-light': isActive(user), 'text-danger': !isOnline(user)}"
+                >{{user.name}}</a>
+              </span>
             </span>
-          </span>
-        </li>
+          </button>
+        </div>
       </ul>
     </div>
   </div>
@@ -119,7 +135,7 @@ export default {
       // use this format to create channel
       return userId < this.currentUser.uid
         ? userId + "/" + this.currentUser.uid
-        : this.currentUser.uid + "/";
+        : this.currentUser.uid + "/" + userId;
     }
   },
 
@@ -132,3 +148,12 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.online {
+  color: green;
+}
+.offline {
+  color: red;
+}
+</style>
