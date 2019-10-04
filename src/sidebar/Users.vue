@@ -3,12 +3,12 @@
     <div class="text-light">
       <h4>Users</h4>
       <ul class="nav flex-column">
-        <li v-for="user in users" :key="user.uid">
-          <span>
+        <li v-for="user in users" :key="user.uid" @click.prevent="changeChannel(user)">
+          <span :class="{'btn btn-primary': isActive(user)}">
             <img class="img rounded-circle" :src="user.avatar" alt="avatar" height="20" />
-            <span
-              :class="{'text-primary': isOnline(user), 'text-danger': !isOnline(user)}"
-            >{{user.name}}</span>
+            <span :class="{'text-primary': isOnline(user), 'text-danger': !isOnline(user)}">
+              <a href="#">{{user.name}}</a>
+            </span>
           </span>
         </li>
       </ul>
@@ -31,7 +31,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["currentUser"])
+    ...mapGetters(["currentUser", "currentChannel"])
   },
 
   methods: {
@@ -95,6 +95,31 @@ export default {
 
     isOnline(user) {
       return user.status === "online";
+    },
+
+    changeChannel(user) {
+      // to change channel, you need channe id
+      // to get channel id, use getChannelId() method below
+      let channelId = this.getChannelId(user.uid);
+      let channel = {
+        id: channelId,
+        name: user.name
+      };
+
+      this.$store.dispatch("setPrivate", true);
+      this.$store.dispatch("setCurrentChannel", channel);
+    },
+
+    isActive(user) {
+      let channelId = this.getChannelId(user.uid);
+      return (this.currentChannel.id = channelId);
+    },
+
+    getChannelId(userId) {
+      // use this format to create channel
+      return userId < this.currentUser.uid
+        ? userId + "/" + this.currentUser.uid
+        : this.currentUser.uid + "/";
     }
   },
 

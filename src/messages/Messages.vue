@@ -58,7 +58,7 @@ export default {
       }
     }
   },
-  beforeDistory() {
+  beforeDestroy() {
     this.detachListeners();
   }
 };
