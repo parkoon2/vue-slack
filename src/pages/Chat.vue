@@ -5,7 +5,9 @@
         <div class="col-md-4 sidebar">
           <sidebar></sidebar>
         </div>
-        <div class="col-md-8 content">contents</div>
+        <div class="col-md-8 content">
+          <message></message>
+        </div>
       </div>
     </div>
   </div>
@@ -13,10 +15,13 @@
 
 <script>
 import Sidebar from "../sidebar/Sidebar";
+import Message from "../messages/Messages";
+
 export default {
   name: "chat",
   components: {
-    Sidebar
+    Sidebar,
+    Message
   },
   methods: {}
 };
