@@ -32,7 +32,8 @@ const actions = {
 
 // Get data from state
 const getters = {
-  currentUser: state => state.currentUser
+  currentUser: state => state.currentUser,
+  currentChannel: state => state.currentChannel
 };
 
 // Create vuex store

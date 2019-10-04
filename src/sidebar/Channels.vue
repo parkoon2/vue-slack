@@ -8,6 +8,8 @@
         v-for="channel in channels"
         class="list-group-item list-group-item-action"
         type="button"
+        @click="changeChannel(channel)"
+        :class="{'active': setActiveChannel(channel)}"
       >{{channel.name}}</button>
     </div>
     <!-- Modal -->
@@ -52,6 +54,7 @@
 
 <script>
 import database from "firebase/database";
+import { mapGetters } from "vuex";
 export default {
   name: "channels",
 
@@ -65,6 +68,7 @@ export default {
   },
 
   computed: {
+    ...mapGetters(["currentChannel"]),
     hasErrors() {
       return this.errors.length > 0;
     }
@@ -100,12 +104,21 @@ export default {
     },
     addListeners() {
       this.channelsRef.on("child_added", sanpshot => {
-        console.log("listening channelRef fon child_added: ", sanpshot.val());
         this.channels.push(sanpshot.val());
       });
     },
     detachListeners() {
       this.channelsRef.off();
+    },
+
+    setActiveChannel(channel) {
+      if (this.currentChannel) {
+        return channel.id === this.currentChannel.id;
+      }
+    },
+
+    changeChannel(channel) {
+      this.$store.dispatch("setCurrentChannel", channel);
     }
   },
 
