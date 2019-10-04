@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="messageForm">
-      <form>
+      <form @submit.prevent="sendMessage">
         <div class="input-group mb-3">
           <input
             v-model="message"
@@ -56,7 +56,11 @@ export default {
             .child(this.currentChannel.id)
             .push()
             .set(newMessage)
-            .then(() => {})
+            .then(() => {
+              this.$nextTick(() => {
+                $("html, body").scrollTop($(document).height());
+              });
+            })
             .catch(err => {
               this.errors.push(err.message);
             });
