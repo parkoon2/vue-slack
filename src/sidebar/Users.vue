@@ -1,5 +1,17 @@
 <template>
-  <div>users</div>
+  <div>
+    <div class="text-light">
+      <h4>Users</h4>
+      <ul class="nav flex-column">
+        <li v-for="user in users" :key="user.uid">
+          <span>
+            <img class="img rounded-circle" :src="user.avatar" alt="avatar" height="20" />
+            <span class="text-primary">{{user.name}}</span>
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 <script>
 import database from "firebase/database";
