@@ -112,7 +112,7 @@ export default {
 
     isActive(user) {
       let channelId = this.getChannelId(user.uid);
-      return (this.currentChannel.id = channelId);
+      return this.currentChannel.id === channelId;
     },
 
     getChannelId(userId) {
