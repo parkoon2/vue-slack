@@ -10,11 +10,18 @@
 <script>
 import SingleMessage from "./SingleMessage";
 import MessageForm from "./MessageForm";
+import database from "firebase/database";
+
 export default {
   name: "message",
   components: {
     SingleMessage,
     MessageForm
+  },
+  data() {
+    return {
+      messageRef: firebase.database().ref("messages")
+    };
   }
 };
 </script>
