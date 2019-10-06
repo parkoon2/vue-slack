@@ -23,7 +23,12 @@
           </div>
 
           <div class="input-group-append">
-            <button @click.prevent="openFileModal" class="btn btn-warning mt-3" type="button">Upload</button>
+            <button
+              @click.prevent="openFileModal"
+              :disabled="uploadState == 'uploading'"
+              class="btn btn-warning mt-3"
+              type="button"
+            >Upload</button>
           </div>
         </div>
       </form>
@@ -155,12 +160,15 @@ export default {
           this.errors.push(error.message);
           this.uploadState = "error";
           this.uploadTask = null;
+          this.$refs.file_modal.resetForm();
         },
         () => {
           // upload finished
           this.uploadState = "done";
 
           // Reset form
+
+          console.log("this.$refs", this.$refs);
           this.$refs.file_modal.resetForm();
 
           let fileUrl = this.uploadTask.snapshot.ref
