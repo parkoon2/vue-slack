@@ -27,17 +27,44 @@
 </template>
 
 <script>
+import mime from "mime-types";
 export default {
   name: "file-modal",
   data() {
     return {
-      file: null
+      file: null,
+      authorized: ["image/jpeg", "image/jpg", "image/png"]
     };
   },
 
   methods: {
-    addFile(e) {},
-    sendFile() {}
+    isValidate(filename) {
+      let index = this.authorized.indexOf(mime.lookup(filename));
+      return index !== -1;
+    },
+    addFile(e) {
+      let files = e.target.files;
+      console.log(files);
+      if (files.length === 1) {
+        this.file = files[0];
+      }
+    },
+    sendFile() {
+      if (this.file) {
+        if (this.isValidate(this.file.name)) {
+          let metadata = {
+            contentType: mime.lookup(this.file.name)
+          };
+          this.$parent.uploadFile(this.file, metadata);
+          $("fileModal").modal("hide");
+        }
+      }
+    },
+    // reset form
+    resetForm() {
+      $(".form").trigger("reset");
+      this.file = null;
+    }
   }
 };
 </script>

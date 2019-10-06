@@ -1,6 +1,13 @@
 <template>
   <div>
     <div class="messageForm">
+      <!-- file upload progress bar -->
+      <div class="progress" v-if="uploadState !== null">
+        <div
+          class="progress-bar progress-bar-striped progress-bar-animated"
+          role="progressbar"
+        >{{uploadLabel}}</div>
+      </div>
       <form @submit.prevent="sendMessage">
         <div class="input-group mb-3">
           <input
@@ -41,13 +48,29 @@ export default {
     return {
       message: "",
       errors: [],
-      storageRef: firebase.storage.ref(),
+      storageRef: firebase.storage().ref(),
       uploadTask: null,
       uploadState: null
     };
   },
   computed: {
-    ...mapGetters(["currentChannel", "currentUser"])
+    ...mapGetters(["currentChannel", "currentUser"]),
+
+    uploadLabel() {
+      switch (this.uploadState) {
+        case "uploading":
+          return "Uploading in progress";
+          break;
+        case "error":
+          return "Error occured";
+          break;
+        case "done":
+          return "Upload completed";
+
+        default:
+          return "";
+      }
+    }
   },
   methods: {
     sendMessage() {
@@ -93,7 +116,7 @@ export default {
       if (!file) return false;
 
       let pathToUpload = this.currentChannel.id;
-      let ref = this.$$parent.getMessagesRef();
+      let ref = this.$parent.getMessagesRef();
       let filePath = this.getPath() + "/" + uuidv4() + ".jpg";
 
       this.uploadTask = this.storageRef.child(filePath).put(file, metadata);
@@ -104,12 +127,18 @@ export default {
         "state_changed",
         snapshot => {
           // upload in progress
+          let percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          $(".progress-bar").css("width", percent + "%");
         },
         err => {
           // error
+          this.errors.push(error.message);
+          this.uploadState = "error";
+          this.uploadTask = null;
         },
         () => {
           // upload finished
+          this.uploadState = "done";
         }
       );
     },
@@ -134,12 +163,16 @@ export default {
   z-index: 100;
   color: #fff;
   text-align: center;
-  margin-bottom: -16px;
+  margin-bottom: -20px;
   margin-left: 33.3%;
 }
 
 input,
 button {
   height: 50px;
+}
+
+.progress {
+  margin-bottom: -16px;
 }
 </style>

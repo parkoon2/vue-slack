@@ -16,7 +16,7 @@ var firebaseConfig = {
   authDomain: "vuexslack-fcdbb.firebaseapp.com",
   databaseURL: "https://vuexslack-fcdbb.firebaseio.com",
   projectId: "vuexslack-fcdbb",
-  storageBucket: "",
+  storageBucket: "vuexslack-fcdbb.appspot.com",
   messagingSenderId: "209602853775",
   appId: "1:209602853775:web:024a4a6735ec36f29469fa",
   measurementId: "G-7ECG2B1MLT"
