@@ -16,17 +16,25 @@
           </div>
 
           <div class="input-group-append">
-            <button class="btn btn-warning mt-3" type="button">Upload</button>
+            <button @click.prevent="openFileModal" class="btn btn-warning mt-3" type="button">Upload</button>
           </div>
         </div>
       </form>
+
+      <!-- File Modal -->
+      <file-modal></file-modal>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
+import FileModal from "./FileModal";
+
 export default {
   name: "message-form",
+  components: {
+    FileModal
+  },
   data() {
     return {
       message: "",
@@ -69,6 +77,11 @@ export default {
           this.message = "";
         }
       }
+    },
+    openFileModal() {
+      $("#fileModal")
+        .appendTo("body")
+        .modal("show");
     }
   }
 };
