@@ -11,7 +11,13 @@
         type="button"
         @click="changeChannel(channel)"
         :class="{'active': setActiveChannel(channel)}"
-      >{{channel.name}}</button>
+      >
+        {{channel.name}}
+        <span
+          v-if="getNotification(channel) > 0 && channel.id !== currentChannel.id"
+          class="float-right"
+        >{{ getNotification(channel)}}</span>
+      </button>
     </div>
     <!-- Modal -->
     <div class="modal fade" id="channelModal">
@@ -71,9 +77,17 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["currentChannel"]),
+    ...mapGetters(["currentChannel", "isPrivate"]),
     hasErrors() {
       return this.errors.length > 0;
+    }
+  },
+
+  watch: {
+    isPrivate() {
+      if (this.isPrivate) {
+        this.resetNotifications();
+      }
     }
   },
 
@@ -153,8 +167,21 @@ export default {
         });
       }
     },
+
+    getNotification(channel) {
+      let notifi = 0;
+      this.notifiCount.forEach(el => {
+        if (el.id === channel.id) {
+          notifi = el.notifi;
+        }
+      });
+      return notifi;
+    },
     detachListeners() {
       this.channelsRef.off();
+      this.channels.forEach(ef => {
+        this.messageRef.child(el.id).off();
+      });
     },
 
     setActiveChannel(channel) {
@@ -164,8 +191,23 @@ export default {
     },
 
     changeChannel(channel) {
+      // reset notifications
+      this.resetNotifications();
+
       this.$store.dispatch("setPrivate", false);
       this.$store.dispatch("setCurrentChannel", channel);
+
+      // set channel
+      this.channel = channel;
+    },
+
+    resetNotifications() {
+      let index = this.notifiCount.findIndex(el => (el.id = this.channel.id));
+      if (index !== -1) {
+        console.log(this.notifiCount[index]);
+        this.notifiCount[index].total = this.notifiCount[index].lastKnownTotal;
+        this.notifiCount[index].notifi = 0;
+      }
     }
   },
 
