@@ -9,7 +9,12 @@
               <a href="#">{{ message.user.name}}</a>
               - {{ message.timestamp | fromNow}}
             </h6>
-            <p :class="{'self-message': selfMessage(message.user)}">{{ message.content }}</p>
+            <p
+              v-if="!isFile(message)"
+              :class="{'self-message': selfMessage(message.user)}"
+            >{{ message.content }}</p>
+
+            <img v-else class="img img-responsive" :src="message.image" alt="image" height="200" />
           </div>
         </div>
       </div>
@@ -31,6 +36,10 @@ export default {
     selfMessage(user) {
       console.log(user, this.currentUser);
       return user.id === this.currentUser.uid;
+    },
+    isFile(message) {
+      console.log("..........................message", message);
+      return !message.content && message.image;
     }
   },
 

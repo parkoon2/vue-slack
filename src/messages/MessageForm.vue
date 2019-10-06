@@ -194,6 +194,15 @@ export default {
         return "chat/public";
       }
     }
+  },
+  mounted() {
+    $("html, body").scrollTop($(document).height());
+  },
+  beforeDestroy() {
+    if (this.uploadTask) {
+      this.uploadTask.cancel();
+      this.uploadTask = null;
+    }
   }
 };
 </script>
