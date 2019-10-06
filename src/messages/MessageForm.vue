@@ -29,6 +29,8 @@
 <script>
 import { mapGetters } from "vuex";
 import FileModal from "./FileModal";
+import uuidv4 from "uuid/v4";
+import storage from "firebase/storage";
 
 export default {
   name: "message-form",
@@ -38,7 +40,10 @@ export default {
   data() {
     return {
       message: "",
-      errors: []
+      errors: [],
+      storageRef: firebase.storage.ref(),
+      uploadTask: null,
+      uploadState: null
     };
   },
   computed: {
@@ -82,6 +87,39 @@ export default {
       $("#fileModal")
         .appendTo("body")
         .modal("show");
+    },
+
+    uploadFile(file, metadata) {
+      if (!file) return false;
+
+      let pathToUpload = this.currentChannel.id;
+      let ref = this.$$parent.getMessagesRef();
+      let filePath = this.getPath() + "/" + uuidv4() + ".jpg";
+
+      this.uploadTask = this.storageRef.child(filePath).put(file, metadata);
+      this.uploadState = "uploading";
+
+      // on upload state change
+      this.uploadTask.on(
+        "state_changed",
+        snapshot => {
+          // upload in progress
+        },
+        err => {
+          // error
+        },
+        () => {
+          // upload finished
+        }
+      );
+    },
+
+    getPath() {
+      if (this.isPrivate) {
+        return "chat/private/" + this.currentChannel.id;
+      } else {
+        return "chat/public";
+      }
     }
   }
 };
