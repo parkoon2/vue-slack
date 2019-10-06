@@ -73,11 +73,10 @@ export default {
     }
   },
   methods: {
-    sendMessage() {
-      // Construct new message object
-
-      let newMessage = {
-        content: this.message,
+    createMessage(fileUrl = null) {
+      // create message object to push to firebase
+      let message = {
+        // content: this.message,
         timestamp: firebase.database.ServerValue.TIMESTAMP,
         user: {
           name: this.currentUser.displayName,
@@ -86,13 +85,34 @@ export default {
         }
       };
 
+      if (!fileUrl) {
+        message["content"] = this.message;
+      } else {
+        message["image"] = fileUrl;
+      }
+
+      return message;
+    },
+    sendMessage() {
+      // Construct new message object
+
+      // let newMessage = {
+      //   content: this.message,
+      //   timestamp: firebase.database.ServerValue.TIMESTAMP,
+      //   user: {
+      //     name: this.currentUser.displayName,
+      //     avatar: this.currentUser.photoURL,
+      //     id: this.currentUser.uid
+      //   }
+      // };
+
       if (this.currentChannel) {
         if (this.message.length > 0) {
           this.$parent
             .getMessagesRef()
             .child(this.currentChannel.id)
             .push()
-            .set(newMessage)
+            .set(this.createMessage())
             .then(() => {
               this.$nextTick(() => {
                 $("html, body").scrollTop($(document).height());
@@ -142,8 +162,29 @@ export default {
 
           // Reset form
           this.$refs.file_modal.resetForm();
+
+          let fileUrl = this.uploadTask.snapshot.ref
+            .getDownloadURL()
+            .then(fileUrl => {
+              this.sendFileMessage(fileUrl, ref, pathToUpload);
+            });
         }
       );
+    },
+
+    sendFileMessage(fileUrl, ref, pathToUpload) {
+      ref
+        .child(pathToUpload)
+        .push()
+        .set(this.createMessage(fileUrl))
+        .then(() => {
+          this.$nextTick(() => {
+            $("html, body").scrollTop($(document).height());
+          });
+        })
+        .catch(err => {
+          this.errors.push(err.message);
+        });
     },
 
     getPath() {
