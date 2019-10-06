@@ -64,6 +64,8 @@ export default {
       new_channel: "",
       errors: [],
       channelsRef: firebase.database().ref("channels"),
+      messagesRef: firebase.database().ref("messages"),
+      notifiCount: [],
       channels: []
     };
   },
@@ -113,7 +115,43 @@ export default {
           this.$store.dispatch("setPrivate", false);
           this.$store.dispatch("setCurrentChannel", this.channel);
         }
+
+        this.addCountListener(sanpshot.key);
       });
+    },
+
+    addCountListener(channelId) {
+      this.messagesRef.child(channelId).on("value", snapshot => {
+        this.handleNotification(
+          channelId,
+          this.currentChannel.id,
+          this.notifiCount,
+          snapshot
+        );
+      });
+    },
+
+    handleNotification(channelId, currentChannelId, notifiCount, snapshot) {
+      let lastTotal = 0;
+      let index = notifiCount.findIndex(el => el.id === channelId);
+
+      if (index !== -1) {
+        if (channelId !== currentChannelId) {
+          lastTotal = notifiCount[index].total;
+          if (snapshot.numChildren() - lastTotal > 0) {
+            notifiCount[index].notifi = snapshot.numChildren() - lastTotal;
+          }
+        }
+
+        notifiCount[index].lastKnownTotal = snapshot.numChildren();
+      } else {
+        notifiCount.push({
+          id: channelId,
+          total: snapshot.numChildren(),
+          lastKnownTotal: snapshot.numChildren(),
+          notifi: 0
+        });
+      }
     },
     detachListeners() {
       this.channelsRef.off();

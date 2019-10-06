@@ -34,11 +34,9 @@ export default {
 
   methods: {
     selfMessage(user) {
-      console.log(user, this.currentUser);
       return user.id === this.currentUser.uid;
     },
     isFile(message) {
-      console.log("..........................message", message);
       return !message.content && message.image;
     }
   },

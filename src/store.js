@@ -16,7 +16,6 @@ const mutations = {
     state.currentUser = payload;
   },
   SET_CURRENT_CHANNEL(state, channel) {
-    console.log("바꾼다....", channel.id);
     state.currentChannel = channel;
   },
   SET_PRIVATE(state, isPrivate) {

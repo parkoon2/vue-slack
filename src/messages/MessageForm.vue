@@ -168,7 +168,6 @@ export default {
 
           // Reset form
 
-          console.log("this.$refs", this.$refs);
           this.$refs.file_modal.resetForm();
 
           let fileUrl = this.uploadTask.snapshot.ref

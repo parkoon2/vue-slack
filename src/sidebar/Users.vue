@@ -53,8 +53,6 @@ export default {
   methods: {
     addListeners() {
       this.usersRef.on("child_added", snapshot => {
-        console.log(this.currentUser.uid);
-        console.log(snapshot.key);
         if (this.currentUser.uid !== snapshot.key) {
           // build user object
 
@@ -83,8 +81,6 @@ export default {
 
       // returns 'connected' to every user connected to our application
       this.connectedRef.on("value", snapshot => {
-        console.log("connected...", snapshot.val());
-
         if (snapshot.val()) {
           let ref = this.presenceRef.child(this.currentUser.uid);
           ref.set(true);
