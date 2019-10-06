@@ -29,7 +29,7 @@
       </form>
 
       <!-- File Modal -->
-      <file-modal></file-modal>
+      <file-modal ref="file_modal"></file-modal>
     </div>
   </div>
 </template>
@@ -139,6 +139,9 @@ export default {
         () => {
           // upload finished
           this.uploadState = "done";
+
+          // Reset form
+          this.$refs.file_modal.resetForm();
         }
       );
     },

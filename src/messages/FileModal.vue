@@ -10,7 +10,7 @@
         </div>
 
         <div class="modal-body">
-          <form>
+          <form class="form">
             <div class="form-group">
               <input @change="addFile" type="file" id="file" name="file" class="form-control" />
             </div>
@@ -56,7 +56,7 @@ export default {
             contentType: mime.lookup(this.file.name)
           };
           this.$parent.uploadFile(this.file, metadata);
-          $("fileModal").modal("hide");
+          $("#fileModal").modal("hide");
         }
       }
     },
