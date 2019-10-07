@@ -62,6 +62,8 @@
 <script>
 import database from "firebase/database";
 import { mapGetters } from "vuex";
+import mixin from "../mixins";
+
 export default {
   name: "channels",
 
@@ -82,6 +84,8 @@ export default {
       return this.errors.length > 0;
     }
   },
+
+  mixins: [mixin],
 
   watch: {
     isPrivate() {
@@ -143,29 +147,6 @@ export default {
           snapshot
         );
       });
-    },
-
-    handleNotification(channelId, currentChannelId, notifiCount, snapshot) {
-      let lastTotal = 0;
-      let index = notifiCount.findIndex(el => el.id === channelId);
-
-      if (index !== -1) {
-        if (channelId !== currentChannelId) {
-          lastTotal = notifiCount[index].total;
-          if (snapshot.numChildren() - lastTotal > 0) {
-            notifiCount[index].notifi = snapshot.numChildren() - lastTotal;
-          }
-        }
-
-        notifiCount[index].lastKnownTotal = snapshot.numChildren();
-      } else {
-        notifiCount.push({
-          id: channelId,
-          total: snapshot.numChildren(),
-          lastKnownTotal: snapshot.numChildren(),
-          notifi: 0
-        });
-      }
     },
 
     getNotification(channel) {
